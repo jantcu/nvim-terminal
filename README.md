@@ -2,6 +2,12 @@
 
 This Vim plugin provides a floating terminal window that can be toggled on and off.
 
+
+
+https://github.com/user-attachments/assets/b145d861-affb-433c-bc64-5575d319b1fb
+
+
+
 ## Installation
 
 Use a plugin manager like Vim-Plug to install the plugin:

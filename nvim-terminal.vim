@@ -18,7 +18,7 @@ if !exists('g:nvim_terminal_large_height')
 endif
 
 " Define the highlight group for the terminal window
-highlight NvimTerminalBackgroundColor guibg=g:nvim_terminal_background_color ctermbg=234
+execute "highlight NvimTerminal#NvimTerminalBackgroundColor guibg=" . g:nvim_terminal_background_color . " ctermbg=234"
 
 " Set default keybindings
 nnoremap <A-t> :call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height)<CR>

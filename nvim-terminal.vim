@@ -29,9 +29,9 @@ augroup AdjustScrolling
 augroup END
 
 " Switch to main window from terminal
-tnoremap <C-w>k <C-\><C-n>:call SwitchToMainWindow()<CR>
+tnoremap <C-w>k <C-\><C-n>:call NvimTerminal#SwitchToMainWindow()<CR>
 " Switch to terminal window from main window and enter insert mode
-nnoremap <C-w>j :call SwitchToTerminalWindow()<CR>
+nnoremap <C-w>j :call NvimTerminal#SwitchToTerminalWindow()<CR>
 " Exit terminal mode
 tnoremap <C-w><Esc> <C-\><C-n>
 " Make sure Ctrl-W works in terminal mode

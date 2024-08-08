@@ -1,8 +1,3 @@
-if exists('g:loaded_nvim_terminal')
-  finish
-endif
-let g:loaded_nvim_terminal = 1
-
 " Initialize required variables
 let g:main_win = 0
 let g:term_win = 0

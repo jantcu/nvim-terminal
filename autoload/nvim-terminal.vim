@@ -1,4 +1,4 @@
-function! NvimTerminal#TermToggle(height)
+function! NvimTerminal#ToggleTerminal(height)
     if win_gotoid(g:term_win)
         if a:height == g:term_height
             let g:term_height = 0

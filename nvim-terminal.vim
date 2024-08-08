@@ -32,3 +32,12 @@ augroup AdjustScrolling
     autocmd!
     autocmd WinEnter,CursorMoved,CursorMovedI * if win_getid() == g:main_win | call NvimTerminal#AdjustMainWindowScrolling() | endif
 augroup END
+
+" Switch to main window from terminal
+tnoremap <C-w>k <C-\><C-n>:call SwitchToMainWindow()<CR>
+" Switch to terminal window from main window and enter insert mode
+nnoremap <C-w>j :call SwitchToTerminalWindow()<CR>
+" Exit terminal mode
+tnoremap <C-w><Esc> <C-\><C-n>
+" Make sure Ctrl-W works in terminal mode
+tnoremap <C-w> <C-\><C-n><C-w>

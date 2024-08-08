@@ -10,7 +10,7 @@ https://github.com/user-attachments/assets/b145d861-affb-433c-bc64-5575d319b1fb
 
 ## Installation
 
-Use a plugin manager like Vim-Plug to install the plugin:
+Use a plugin manager like [vim-plug](https://github.com/junegunn/vim-plug) to install the plugin. Add the following to `~/.config/nvim/init.vim`:
 
 ```vim
 Plug 'Jantcu/nvim-terminal'

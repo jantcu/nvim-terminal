@@ -52,13 +52,13 @@ function! NvimTerminal#ToggleTerminal(height)
         setlocal nohidden
         startinsert!
     endif
-    call AdjustMainWindowScrolling()
+    call NvimTerminal#AdjustMainWindowScrolling()
 endfunction
 
 function! NvimTerminal#AdjustMainWindowScrolling()
     if g:term_height > 0
         let l:main_height = g:term_height
-        call win_execute(g:main_win, 'call AdjustScrollOff(' . l:main_height . ')')
+        call win_execute(g:main_win, 'call NvimTerminal#AdjustScrollOff(' . l:main_height . ')')
     else
         call setwinvar(g:main_win, '&scrolloff', 0)
     endif
@@ -93,7 +93,7 @@ endfunction
 function! NvimTerminal#SwitchToMainWindow()
     if win_getid() == g:term_win
         call win_gotoid(g:main_win)
-        call AdjustMainWindowScrolling()
+        call NvimTerminal#AdjustMainWindowScrolling()
     endif
 endfunction
 

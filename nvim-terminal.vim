@@ -24,10 +24,10 @@ if !exists('g:nvim_terminal_toggle_large')
 endif
 
 " Set default keybindings
-nnoremap <expr> g:nvim_terminal_toggle_small :call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color)<CR>
-tnoremap <expr> g:nvim_terminal_toggle_small <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color)<CR>
-nnoremap <expr> g:nvim_terminal_toggle_large :call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height, g:nvim_terminal_background_color)<CR>
-tnoremap <expr> g:nvim_terminal_toggle_large <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height, g:nvim_terminal_background_color)<CR>
+execute 'nnoremap <silent> ' . g:nvim_terminal_toggle_small . ' :call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color)<CR>'
+execute 'tnoremap <silent> ' . g:nvim_terminal_toggle_small . ' <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color)<CR>'
+execute 'nnoremap <silent> ' . g:nvim_terminal_toggle_large . ' :call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height, g:nvim_terminal_background_color)<CR>'
+execute 'tnoremap <silent> ' . g:nvim_terminal_toggle_large . ' <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height, g:nvim_terminal_background_color)<CR>'
 
 augroup AdjustScrolling
     autocmd!

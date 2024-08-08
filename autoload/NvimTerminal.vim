@@ -18,7 +18,7 @@ function! NvimTerminal#ToggleTerminal(height)
                 \ }
             let win = nvim_open_win(buf, v:true, opts)
             let g:term_win = win_getid()
-            call setwinvar(win, '&winhl', 'Normal:TerminalBackground')
+            call setwinvar(win, '&winhl', 'Normal:NvimTerminalBackground')
             call setwinvar(win, '&number', 0)
             call setwinvar(win, '&relativenumber', 0)
             call setwinvar(win, '&signcolumn', 'no')
@@ -39,7 +39,7 @@ function! NvimTerminal#ToggleTerminal(height)
             \ }
         let win = nvim_open_win(buf, v:true, opts)
         " Set window options
-        call setwinvar(win, '&winhl', 'Normal:TerminalBackground')
+        call setwinvar(win, '&winhl', 'Normal:NvimTerminalBackground')
         call setwinvar(win, '&number', 0)
         call setwinvar(win, '&relativenumber', 0)
         call setwinvar(win, '&signcolumn', 'no')

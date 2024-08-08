@@ -104,3 +104,8 @@ function! NvimTerminal#SwitchToTerminalWindow()
         startinsert!
     endif
 endfunction
+
+augroup AdjustScrolling
+    autocmd!
+    autocmd WinEnter,CursorMoved,CursorMovedI * if win_getid() == g:main_win | call NvimTerminal#AdjustMainWindowScrolling() | endif
+augroup END

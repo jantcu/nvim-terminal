@@ -17,14 +17,11 @@ if !exists('g:nvim_terminal_large_height')
   let g:nvim_terminal_large_height = 50
 endif
 
-" Define the highlight group for the terminal window
-execute "highlight NvimTerminal#NvimTerminalBackgroundColor guibg=" . g:nvim_terminal_background_color . " ctermbg=234"
-
 " Set default keybindings
-nnoremap <A-t> :call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height)<CR>
-tnoremap <A-t> <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height)<CR>
-nnoremap <A-z> :call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height)<CR>
-tnoremap <A-z> <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height)<CR>
+nnoremap <A-t> :call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color)<CR>
+tnoremap <A-t> <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color)<CR>
+nnoremap <A-z> :call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height, g:nvim_terminal_background_color)<CR>
+tnoremap <A-z> <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height, g:nvim_terminal_background_color)<CR>
 
 augroup AdjustScrolling
     autocmd!

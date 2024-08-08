@@ -13,6 +13,8 @@ Plug 'Jantcu/nvim-terminal'
 Then `:PlugInstall`
 
 ## Configuration defaults
-let g:term_toggle_background_color = '#171b21'
-let g:term_toggle_small_height = 10
-let g:term_toggle_large_height = 50
+
+You can override these in `~/.config/nvim/init.vim`:
+- `let g:term_toggle_background_color = '#171b21'`
+- `let g:term_toggle_small_height = 10`
+- `let g:term_toggle_large_height = 50`

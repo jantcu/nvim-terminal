@@ -29,6 +29,8 @@ The default keyboard shortcuts are:
 ## Configuration defaults
 
 You can override these in `~/.config/nvim/init.vim`:
+- `let g:nvim_terminal_toggle_small = '<A-t>'`
+- `let g:nvim_terminal_toggle_small = '<A-z>'`
 - `let g:nvim_terminal_background_color = '#171b21'`
 - `let g:nvim_terminal_small_height = 10`
 - `let g:nvim_terminal_large_height = 50`

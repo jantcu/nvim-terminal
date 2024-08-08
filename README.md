@@ -18,9 +18,17 @@ Plug 'Jantcu/nvim-terminal'
 
 Then `:PlugInstall`
 
+## Usage
+
+The default keyboard shortcuts are:
+- Open/close small terminal: <kbd>Alt</kbd>-<kbd>t</kbd>
+- Open/close large terminal: <kbd>Alt</kbd>-<kbd>z</kbd>
+- Switch from terminal to main window: <kbd>Ctrl</kbd>-<kbd>w</kbd>+<kbd>k</kbd>
+- Switch from main window to terminal: <kbd>Ctrl</kbd>-<kbd>w</kbd>+<kbd>j</kbd>
+
 ## Configuration defaults
 
 You can override these in `~/.config/nvim/init.vim`:
-- `let g:term_toggle_background_color = '#171b21'`
-- `let g:term_toggle_small_height = 10`
-- `let g:term_toggle_large_height = 50`
+- `let g:nvim_terminal_background_color = '#171b21'`
+- `let g:nvim_terminal_small_height = 10`
+- `let g:nvim_terminal_large_height = 50`

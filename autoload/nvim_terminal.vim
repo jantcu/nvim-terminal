@@ -1,4 +1,4 @@
-function! nvim-terminal#TermToggle(height)
+function! NvimTerminal#TermToggle(height)
     if win_gotoid(g:term_win)
         if a:height == g:term_height
             let g:term_height = 0
@@ -55,7 +55,7 @@ function! nvim-terminal#TermToggle(height)
     call AdjustMainWindowScrolling()
 endfunction
 
-function! nvim-terminal#AdjustMainWindowScrolling()
+function! NvimTerminal#AdjustMainWindowScrolling()
     if g:term_height > 0
         let l:main_height = g:term_height
         call win_execute(g:main_win, 'call AdjustScrollOff(' . l:main_height . ')')
@@ -64,7 +64,7 @@ function! nvim-terminal#AdjustMainWindowScrolling()
     endif
 endfunction
 
-function! nvim-terminal#AdjustScrollOff(main_height)
+function! NvimTerminal#AdjustScrollOff(main_height)
     let l:total_lines = line('$')
     let l:current_line = line('.')
     let l:visible_lines = &lines - a:main_height - &cmdheight - 1
@@ -90,14 +90,14 @@ function! nvim-terminal#AdjustScrollOff(main_height)
 
 endfunction
 
-function! nvim-terminal#SwitchToMainWindow()
+function! NvimTerminal#SwitchToMainWindow()
     if win_getid() == g:term_win
         call win_gotoid(g:main_win)
         call AdjustMainWindowScrolling()
     endif
 endfunction
 
-function! nvim-terminal#SwitchToTerminalWindow()
+function! NvimTerminal#SwitchToTerminalWindow()
     if win_getid() == g:main_win && g:term_win != 0
         call win_gotoid(g:term_win)
         setlocal scrolloff=0

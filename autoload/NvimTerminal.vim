@@ -1,6 +1,6 @@
 function! NvimTerminal#ToggleTerminal(height, background_color)
     " Define a new color group with the desired background color
-    execute 'highlight NvimTerminalBackgroundColor guibg=' . background_color . ' ctermbg=' . str2nr(background_color, 16)
+    execute 'highlight NvimTerminalBackgroundColor guibg=' . a:background_color . ' ctermbg=234'
     if win_gotoid(g:term_win)
         if a:height == g:term_height
             let g:term_height = 0

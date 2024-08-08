@@ -27,8 +27,3 @@ nnoremap <A-t> :call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height)<C
 tnoremap <A-t> <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height)<CR>
 nnoremap <A-z> :call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height)<CR>
 tnoremap <A-z> <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height)<CR>
-
-augroup AdjustScrolling
-    autocmd!
-    autocmd WinEnter,CursorMoved,CursorMovedI * if win_getid() == g:main_win | call NvimTerminal#AdjustMainWindowScrolling() | endif
-augroup END

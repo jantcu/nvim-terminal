@@ -1,4 +1,6 @@
-function! NvimTerminal#ToggleTerminal(height)
+function! NvimTerminal#ToggleTerminal(height, background_color)
+    " Define a new color group with the desired background color
+    execute 'highlight NvimTerminalBackgroundColor guibg=' . background_color . ' ctermbg=' . str2nr(background_color, 16)
     if win_gotoid(g:term_win)
         if a:height == g:term_height
             let g:term_height = 0
@@ -18,7 +20,7 @@ function! NvimTerminal#ToggleTerminal(height)
                 \ }
             let win = nvim_open_win(buf, v:true, opts)
             let g:term_win = win_getid()
-            call setwinvar(win, '&winhl', 'Normal:NvimTerminal#NvimTerminalBackgroundColor')
+            call setwinvar(win, '&winhl', 'Normal:NvimTerminalBackgroundColor')
             call setwinvar(win, '&number', 0)
             call setwinvar(win, '&relativenumber', 0)
             call setwinvar(win, '&signcolumn', 'no')
@@ -39,7 +41,7 @@ function! NvimTerminal#ToggleTerminal(height)
             \ }
         let win = nvim_open_win(buf, v:true, opts)
         " Set window options
-        call setwinvar(win, '&winhl', 'Normal:NvimTerminal#NvimTerminalBackgroundColor')
+        call setwinvar(win, '&winhl', 'Normal:NvimTerminalBackgroundColor')
         call setwinvar(win, '&number', 0)
         call setwinvar(win, '&relativenumber', 0)
         call setwinvar(win, '&signcolumn', 'no')

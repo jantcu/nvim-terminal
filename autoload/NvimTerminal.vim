@@ -64,6 +64,15 @@ function! NvimTerminal#ShowStatusLine()
             " Update the contents of the existing status line window
             let status_buf = nvim_win_get_buf(g:term_status_win)
             call nvim_buf_set_lines(status_buf, 0, -1, v:true, [NvimTerminal#UpdateStatusLine()])
+            let opts = {
+                \ 'relative': 'editor',
+                \ 'row': &lines - g:term_height - 2,
+                \ 'col': 0,
+                \ 'width': &columns,
+                \ 'height': 1,
+                \ 'style': 'minimal'
+                \ }
+            call nvim_win_set_config(g:term_status_win, opts)
         else
             " Create a new buffer for the status line
             let status_buf = nvim_create_buf(v:false, v:true)

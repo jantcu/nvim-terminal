@@ -1,5 +1,89 @@
+function! NvimTerminal#NewTerminal()
+    if g:term_height > 0
+        " Create a new buffer
+        let buf = nvim_create_buf(v:false, v:true)
+        call add(g:term_buf, buf)
+        let g:current_term = len(g:term_buf) - 1
+        
+        " Switch to the new buffer
+        call nvim_win_set_buf(g:term_win, buf)
+        
+        " Open terminal in the new buffer
+        call termopen($SHELL, {"detach": 0})
+        
+        " Set buffer options
+        setlocal nobuflisted
+        setlocal nohidden
+
+        " Update status line
+        "call setwinvar(g:term_win, '&statusline', '%!NvimTerminal#UpdateStatusLine()')
+        call NvimTerminal#ShowStatusLine()
+
+        startinsert!
+    else
+        echo "Terminal is not open. Open it first with Alt-t (or whatever your custom keymap is)."
+    endif
+endfunction
+
+function! NvimTerminal#NextTerminal()
+    if g:term_height > 0 && !empty(g:term_buf)
+        let g:current_term = (g:current_term + 1) % len(g:term_buf)
+        call nvim_win_set_buf(g:term_win, g:term_buf[g:current_term])
+        "call setwinvar(g:term_win, '&statusline', '%!NvimTerminal#UpdateStatusLine()')
+        call NvimTerminal#ShowStatusLine()
+        startinsert!
+    endif
+endfunction
+
+function! NvimTerminal#PrevTerminal()
+    if g:term_height > 0 && !empty(g:term_buf)
+        let g:current_term = (g:current_term - 1 + len(g:term_buf)) % len(g:term_buf)
+        call nvim_win_set_buf(g:term_win, g:term_buf[g:current_term])
+        "call setwinvar(g:term_win, '&statusline', '%!NvimTerminal#UpdateStatusLine()')
+        call NvimTerminal#ShowStatusLine()
+        startinsert!
+    endif
+endfunction
+
+function! NvimTerminal#UpdateStatusLine()
+    if g:term_height > 0 && !empty(g:term_buf)
+        let status = ' Terminal ' . (g:current_term + 1) . '/' . len(g:term_buf) . ' '
+        let fillchar = '─'
+        let fill = repeat(fillchar, &columns - len(status))
+        return fill . status
+    endif
+    return ''
+endfunction
+
+function! NvimTerminal#ShowStatusLine()
+    if g:term_height > 0
+        " Create a new buffer for the status line
+        let status_buf = nvim_create_buf(v:false, v:true)
+        call nvim_buf_set_lines(status_buf, 0, -1, v:true, [NvimTerminal#UpdateStatusLine()])
+        
+        " Create a new window for the status line
+        let opts = {
+            \ 'relative': 'editor',
+            \ 'row': &lines - g:term_height - 2,
+            \ 'col': 0,
+            \ 'width': &columns,
+            \ 'height': 1,
+            \ 'style': 'minimal'
+            \ }
+        let status_win = nvim_open_win(status_buf, v:false, opts)
+        
+        " Set window options
+        call setwinvar(status_win, '&winhl', 'Normal:StatusLine')
+        call setwinvar(status_win, '&number', 0)
+        call setwinvar(status_win, '&relativenumber', 0)
+        call setwinvar(status_win, '&signcolumn', 'no')
+        
+        " Store the status window ID
+        let g:term_status_win = status_win
+    endif
+endfunction
+
 function! NvimTerminal#ToggleTerminal(height, background_color)
-    " Define a new color group with the desired background color
     execute 'highlight NvimTerminalBackgroundColor guibg=' . a:background_color . ' ctermbg=234'
     if win_gotoid(g:term_win)
         if a:height == g:term_height
@@ -8,7 +92,7 @@ function! NvimTerminal#ToggleTerminal(height, background_color)
         else
             let g:term_height = a:height
             " Recreate the floating window with new size
-            let buf = winbufnr(g:term_win)
+            let buf = g:term_buf[g:current_term]
             call nvim_win_close(g:term_win, v:false)
             let opts = {
                 \ 'relative': 'editor',
@@ -24,13 +108,19 @@ function! NvimTerminal#ToggleTerminal(height, background_color)
             call setwinvar(win, '&number', 0)
             call setwinvar(win, '&relativenumber', 0)
             call setwinvar(win, '&signcolumn', 'no')
+            call NvimTerminal#ShowStatusLine()
             startinsert!
         endif
     elseif g:term_height == 0
         let g:main_win = win_getid()  " Remember the main window ID
         let g:term_height = a:height
         " Create a floating window
-        let buf = nvim_create_buf(v:false, v:true)
+        if empty(g:term_buf)
+            let buf = nvim_create_buf(v:false, v:true)
+            call add(g:term_buf, buf)
+        else
+            let buf = g:term_buf[g:current_term]
+        endif
         let opts = {
             \ 'relative': 'editor',
             \ 'row': &lines - a:height,
@@ -45,15 +135,27 @@ function! NvimTerminal#ToggleTerminal(height, background_color)
         call setwinvar(win, '&number', 0)
         call setwinvar(win, '&relativenumber', 0)
         call setwinvar(win, '&signcolumn', 'no')
-        " Open terminal in the floating window
-        call termopen($SHELL, {"detach": 0})
-        let g:term_buf = bufnr("")
+        " Open terminal in the floating window if it's a new buffer
+        if bufname(buf) == ''
+            call termopen($SHELL, {"detach": 0})
+        endif
         let g:term_win = win_getid()
         " Set buffer options
         setlocal nobuflisted
         setlocal nohidden
+        "call NvimTerminal#ShowStatusLine()
         startinsert!
     endif
+
+    if g:term_height > 0
+        call NvimTerminal#ShowStatusLine()
+    else
+        if exists('g:term_status_win')
+            call nvim_win_close(g:term_status_win, v:true)
+            unlet g:term_status_win
+        endif
+    endif
+
     call NvimTerminal#AdjustMainWindowScrolling()
 endfunction
 

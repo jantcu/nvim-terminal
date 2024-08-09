@@ -4,13 +4,16 @@ function! NvimTerminal#NewTerminal()
         let buf = nvim_create_buf(v:false, v:true)
         call add(g:term_buf, buf)
         let g:current_term = len(g:term_buf) - 1
-        
+
         " Switch to the new buffer
         call nvim_win_set_buf(g:term_win, buf)
         
         " Open terminal in the new buffer
         call termopen($SHELL, {"detach": 0})
-        
+
+        " Set background color
+        call setwinvar(g:term_win, '&winhl', 'Normal:NvimTerminalBackgroundColor')
+
         " Set buffer options
         setlocal nobuflisted
         setlocal nohidden

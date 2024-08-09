@@ -2,6 +2,8 @@
 let g:main_win = 0
 let g:term_win = 0
 let g:term_height = 0
+let g:term_buf = []
+let g:current_term = 0
 
 " Source the main plugin functions
 execute 'source' . expand('<sfile>:p:h') . '/autoload/NvimTerminal.vim'
@@ -34,6 +36,9 @@ augroup AdjustScrolling
     autocmd WinEnter,CursorMoved,CursorMovedI * if win_getid() == g:main_win | call NvimTerminal#AdjustMainWindowScrolling() | endif
 augroup END
 
+tnoremap <A-+> <C-\><C-n>:call NvimTerminal#NewTerminal()<CR>
+tnoremap <A-]> <C-\><C-n>:call NvimTerminal#NextTerminal()<CR>
+tnoremap <A-[> <C-\><C-n>:call NvimTerminal#PrevTerminal()<CR>
 " Switch to main window from terminal
 tnoremap <C-w>k <C-\><C-n>:call NvimTerminal#SwitchToMainWindow()<CR>
 " Switch to terminal window from main window and enter insert mode

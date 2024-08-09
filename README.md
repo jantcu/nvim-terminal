@@ -25,6 +25,9 @@ The default keyboard shortcuts are:
 - Open/close large terminal: <kbd>Alt</kbd>-<kbd>z</kbd>
 - Switch from terminal to main window: <kbd>Ctrl</kbd>-<kbd>w</kbd>+<kbd>k</kbd>
 - Switch from main window to terminal: <kbd>Ctrl</kbd>-<kbd>w</kbd>+<kbd>j</kbd>
+- Create new terminal when already in an opened terminal: <kbd>Alt</kbd>-<kbd>+</kbd>
+- Move to next terminal: <kbd>Alt</kbd>-<kbd>]</kbd>
+- Move to previous terminal: <kbd>Alt</kbd>-<kbd>[</kbd>
 
 ## Configuration defaults
 

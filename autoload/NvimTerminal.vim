@@ -200,7 +200,7 @@ function! NvimTerminal#AdjustScrollOff(main_height)
         let l:adjust_line = l:total_lines - g:term_height
 
         if l:current_line >= l:adjust_line
-            let l:desired_top_line = l:total_lines - l:visible_lines + 1
+            let l:desired_top_line = l:total_lines - l:visible_lines + 2
             let l:current_top_line = line('w0')
             
             if l:current_top_line < l:desired_top_line

@@ -1,4 +1,4 @@
-function! NvimTerminal#NewTerminal()
+function! NvimTerminal#AddTerminal()
     if g:term_height > 0
         " Create a new buffer
         let buf = nvim_create_buf(v:false, v:true)
@@ -25,6 +25,51 @@ function! NvimTerminal#NewTerminal()
         startinsert!
     else
         echo "Terminal is not open. Open it first with Alt-t (or whatever your custom keymap is)."
+    endif
+endfunction
+
+function! NvimTerminal#RemoveTerminal()
+    if g:term_height > 0 && !empty(g:term_buf)
+        " Store the current terminal buffer
+        let current_buf = g:term_buf[g:current_term]
+
+        " Remove the current terminal buffer from the list
+        call remove(g:term_buf, g:current_term)
+
+        " Close the current terminal buffer
+        execute 'bdelete! ' . current_buf
+
+        if !empty(g:term_buf)
+            " Switch to the previous terminal buffer
+            let g:current_term = (g:current_term - 1 + len(g:term_buf)) % len(g:term_buf)
+
+            " Create a new floating window with the correct size and position
+            let opts = {
+                \ 'relative': 'editor',
+                \ 'row': &lines - g:term_height,
+                \ 'col': 0,
+                \ 'width': &columns,
+                \ 'height': g:term_height,
+                \ 'style': 'minimal'
+                \ }
+            let win = nvim_open_win(g:term_buf[g:current_term], v:true, opts)
+            let g:term_win = win_getid(win)
+
+            " Set window options
+            call setwinvar(win, '&winhl', 'Normal:NvimTerminalBackgroundColor')
+            call setwinvar(win, '&number', 0)
+            call setwinvar(win, '&relativenumber', 0)
+            call setwinvar(win, '&signcolumn', 'no')
+
+            call NvimTerminal#ShowStatusLine()
+            startinsert!
+        else
+            " If there are no more terminal buffers, close the terminal window
+            let g:term_height = 0
+            let g:term_win = 0
+            call win_gotoid(g:main_win)
+            call NvimTerminal#ShowStatusLine()
+        endif
     endif
 endfunction
 

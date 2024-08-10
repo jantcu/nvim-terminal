@@ -36,7 +36,8 @@ augroup AdjustScrolling
     autocmd WinEnter,CursorMoved,CursorMovedI * if win_getid() == g:main_win | call NvimTerminal#AdjustMainWindowScrolling() | endif
 augroup END
 
-tnoremap <A-+> <C-\><C-n>:call NvimTerminal#NewTerminal()<CR>
+tnoremap <A-+> <C-\><C-n>:call NvimTerminal#AddTerminal()<CR>
+tnoremap <A--> <C-\><C-n>:call NvimTerminal#RemoveTerminal()<CR>
 tnoremap <A-]> <C-\><C-n>:call NvimTerminal#NextTerminal()<CR>
 tnoremap <A-[> <C-\><C-n>:call NvimTerminal#PrevTerminal()<CR>
 " Switch to main window from terminal

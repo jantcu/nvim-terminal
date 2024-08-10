@@ -65,11 +65,13 @@ function! NvimTerminal#RemoveTerminal()
             startinsert!
         else
             " If there are no more terminal buffers, close the terminal window
+            let g:term_buf = []
             let g:term_height = 0
             let g:term_win = 0
             call win_gotoid(g:main_win)
             call NvimTerminal#ShowStatusLine()
         endif
+        call NvimTerminal#ShowStatusLine()
     endif
 endfunction
 
@@ -104,7 +106,7 @@ function! NvimTerminal#UpdateStatusLine()
 endfunction
 
 function! NvimTerminal#ShowStatusLine()
-    if g:term_height > 0
+    if g:term_height > 0 && !empty(g:term_buf)
         if exists('g:term_status_win')
             " Update the contents of the existing status line window
             let status_buf = nvim_win_get_buf(g:term_status_win)
@@ -143,6 +145,12 @@ function! NvimTerminal#ShowStatusLine()
 
             " Store the status window ID
             let g:term_status_win = status_win
+        endif
+    else
+        " Remove the status line if there are no terminals
+        if exists('g:term_status_win')
+            call nvim_win_close(g:term_status_win, v:true)
+            unlet g:term_status_win
         endif
     endif
 endfunction

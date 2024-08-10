@@ -135,10 +135,11 @@ function! NvimTerminal#ShowStatusLine()
             let status_win = nvim_open_win(status_buf, v:false, opts)
 
             " Set window options
-            call setwinvar(status_win, '&winhl', 'Normal:StatusLine')
             call setwinvar(status_win, '&number', 0)
             call setwinvar(status_win, '&relativenumber', 0)
             call setwinvar(status_win, '&signcolumn', 'no')
+            call setwinvar(status_win, '&winhl', 'Normal:NvimTerminalBackgroundColor')
+            call setwinvar(status_win, '&winhighlight', 'Normal:NvimTerminalStatusLineColor')
 
             " Store the status window ID
             let g:term_status_win = status_win
@@ -146,8 +147,9 @@ function! NvimTerminal#ShowStatusLine()
     endif
 endfunction
 
-function! NvimTerminal#ToggleTerminal(height, background_color)
+function! NvimTerminal#ToggleTerminal(height, background_color, statusline_color)
     execute 'highlight NvimTerminalBackgroundColor guibg=' . a:background_color . ' ctermbg=234'
+    execute 'highlight NvimTerminalStatusLineColor guifg=' . a:statusline_color . ' ctermbg=234'
     if win_gotoid(g:term_win)
         if a:height == g:term_height
             let g:term_height = 0

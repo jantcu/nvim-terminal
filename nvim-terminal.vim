@@ -12,6 +12,9 @@ execute 'source' . expand('<sfile>:p:h') . '/autoload/NvimTerminal.vim'
 if !exists('g:nvim_terminal_background_color')
   let g:nvim_terminal_background_color = '#171b21'
 endif
+if !exists('g:nvim_terminal_statusline_color')
+  let g:nvim_terminal_statusline_color = '#3fbbce'
+endif
 if !exists('g:nvim_terminal_small_height')
   let g:nvim_terminal_small_height = 10
 endif
@@ -26,10 +29,10 @@ if !exists('g:nvim_terminal_toggle_large')
 endif
 
 " Set default keybindings
-execute 'nnoremap <silent> ' . g:nvim_terminal_toggle_small . ' :call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color)<CR>'
-execute 'tnoremap <silent> ' . g:nvim_terminal_toggle_small . ' <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color)<CR>'
-execute 'nnoremap <silent> ' . g:nvim_terminal_toggle_large . ' :call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height, g:nvim_terminal_background_color)<CR>'
-execute 'tnoremap <silent> ' . g:nvim_terminal_toggle_large . ' <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height, g:nvim_terminal_background_color)<CR>'
+execute 'nnoremap <silent> ' . g:nvim_terminal_toggle_small . ' :call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color, g:nvim_terminal_statusline_color)<CR>'
+execute 'tnoremap <silent> ' . g:nvim_terminal_toggle_small . ' <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color, g:nvim_terminal_statusline_color)<CR>'
+execute 'nnoremap <silent> ' . g:nvim_terminal_toggle_large . ' :call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height, g:nvim_terminal_background_color, g:nvim_terminal_statusline_color)<CR>'
+execute 'tnoremap <silent> ' . g:nvim_terminal_toggle_large . ' <C-\><C-n>:call NvimTerminal#ToggleTerminal(g:nvim_terminal_large_height, g:nvim_terminal_background_color, g:nvim_terminal_statusline_color)<CR>'
 
 augroup AdjustScrolling
     autocmd!

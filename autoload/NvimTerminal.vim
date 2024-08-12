@@ -110,6 +110,10 @@ function! NvimTerminal#SetCustomStatus()
             if !empty(custom_name)
                 let g:nvim_terminal_custom_names[g:current_term] = custom_name
             elseif has_key(g:nvim_terminal_custom_names, g:current_term)
+                echohl WarningMsg
+                echo "Cancelled name change"
+                echohl None
+            else
                 call remove(g:nvim_terminal_custom_names, g:current_term)
             endif
             call NvimTerminal#ShowStatusLine()

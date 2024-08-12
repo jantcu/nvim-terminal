@@ -37,11 +37,27 @@ function! NvimTerminal#RemoveTerminal()
 
         " Remove the current terminal buffer from the list
         call remove(g:term_buf, g:current_term)
+
         " Remove custom name for the closed terminal
-        call remove(g:nvim_terminal_custom_names, g:current_term)
+        if has_key(g:nvim_terminal_custom_names, g:current_term)
+            call remove(g:nvim_terminal_custom_names, g:current_term)
+        endif
 
         " Close the current terminal buffer
         execute 'bdelete! ' . current_buf
+
+        " Adjust the custom names dictionary
+        let new_names = {}
+        let index = 0
+        for [key, value] in items(g:nvim_terminal_custom_names)
+            if key > g:current_term
+                let new_names[index] = value
+            elseif key < g:current_term
+                let new_names[key] = value
+            endif
+            let index += 1
+        endfor
+        let g:nvim_terminal_custom_names = new_names
 
         if !empty(g:term_buf)
             " Switch to the previous terminal buffer
@@ -71,6 +87,7 @@ function! NvimTerminal#RemoveTerminal()
             let g:term_buf = []
             let g:term_height = 0
             let g:term_win = 0
+            let g:nvim_terminal_custom_names = {}
             call win_gotoid(g:main_win)
         endif
         call NvimTerminal#ShowStatusLine()

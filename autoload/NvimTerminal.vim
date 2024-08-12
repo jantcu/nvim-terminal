@@ -53,7 +53,7 @@ function! NvimTerminal#RemoveTerminal()
                 \ 'style': 'minimal'
                 \ }
             let win = nvim_open_win(g:term_buf[g:current_term], v:true, opts)
-            let g:term_win = win_getid(win)
+            let g:term_win = win_getid()
 
             " Set window options
             call setwinvar(win, '&winhl', 'Normal:NvimTerminalBackgroundColor')
@@ -61,7 +61,6 @@ function! NvimTerminal#RemoveTerminal()
             call setwinvar(win, '&relativenumber', 0)
             call setwinvar(win, '&signcolumn', 'no')
 
-            call NvimTerminal#ShowStatusLine()
             startinsert!
         else
             " If there are no more terminal buffers, close the terminal window
@@ -69,7 +68,6 @@ function! NvimTerminal#RemoveTerminal()
             let g:term_height = 0
             let g:term_win = 0
             call win_gotoid(g:main_win)
-            call NvimTerminal#ShowStatusLine()
         endif
         call NvimTerminal#ShowStatusLine()
     endif
@@ -158,11 +156,15 @@ endfunction
 function! NvimTerminal#ToggleTerminal(height, background_color, statusline_color)
     execute 'highlight NvimTerminalBackgroundColor guibg=' . a:background_color . ' ctermbg=234'
     execute 'highlight NvimTerminalStatusLineColor guifg=' . a:statusline_color . ' ctermbg=234'
-    if win_gotoid(g:term_win)
+    if win_gotoid(g:term_win) && !empty(g:term_buf)
+        " Entered a terminal window
         if a:height == g:term_height
+            " Toggling terminal with same height (close terminal)
             let g:term_height = 0
+            let g:term_win = 0
             hide
         else
+            " Toggling terminal with different height (expand/contract terminal)
             let g:term_height = a:height
             " Recreate the floating window with new size
             let buf = g:term_buf[g:current_term]
@@ -181,10 +183,10 @@ function! NvimTerminal#ToggleTerminal(height, background_color, statusline_color
             call setwinvar(win, '&number', 0)
             call setwinvar(win, '&relativenumber', 0)
             call setwinvar(win, '&signcolumn', 'no')
-            call NvimTerminal#ShowStatusLine()
             startinsert!
         endif
-    elseif g:term_height == 0
+    else
+        " Terminal doesn't exist yet so we need to create it
         let g:main_win = win_getid()  " Remember the main window ID
         let g:term_height = a:height
         " Create a floating window
@@ -216,19 +218,10 @@ function! NvimTerminal#ToggleTerminal(height, background_color, statusline_color
         " Set buffer options
         setlocal nobuflisted
         setlocal nohidden
-        "call NvimTerminal#ShowStatusLine()
         startinsert!
     endif
 
-    if g:term_height > 0
-        call NvimTerminal#ShowStatusLine()
-    else
-        if exists('g:term_status_win')
-            call nvim_win_close(g:term_status_win, v:true)
-            unlet g:term_status_win
-        endif
-    endif
-
+    call NvimTerminal#ShowStatusLine()
     call NvimTerminal#AdjustMainWindowScrolling()
 endfunction
 

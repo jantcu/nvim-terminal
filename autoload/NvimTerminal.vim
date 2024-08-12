@@ -7,7 +7,7 @@ function! NvimTerminal#AddTerminal()
 
         " Switch to the new buffer
         call nvim_win_set_buf(g:term_win, buf)
-        
+
         " Open terminal in the new buffer
         call termopen($SHELL, {"detach": 0})
 
@@ -19,7 +19,6 @@ function! NvimTerminal#AddTerminal()
         setlocal nohidden
 
         " Update status line
-        "call setwinvar(g:term_win, '&statusline', '%!NvimTerminal#UpdateStatusLine()')
         call NvimTerminal#ShowStatusLine()
 
         startinsert!
@@ -35,6 +34,8 @@ function! NvimTerminal#RemoveTerminal()
 
         " Remove the current terminal buffer from the list
         call remove(g:term_buf, g:current_term)
+        " Remove custom name for the closed terminal
+        call remove(g:nvim_terminal_custom_names, g:current_term)
 
         " Close the current terminal buffer
         execute 'bdelete! ' . current_buf
@@ -77,7 +78,6 @@ function! NvimTerminal#NextTerminal()
     if g:term_height > 0 && !empty(g:term_buf)
         let g:current_term = (g:current_term + 1) % len(g:term_buf)
         call nvim_win_set_buf(g:term_win, g:term_buf[g:current_term])
-        "call setwinvar(g:term_win, '&statusline', '%!NvimTerminal#UpdateStatusLine()')
         call NvimTerminal#ShowStatusLine()
         startinsert!
     endif
@@ -87,7 +87,6 @@ function! NvimTerminal#PrevTerminal()
     if g:term_height > 0 && !empty(g:term_buf)
         let g:current_term = (g:current_term - 1 + len(g:term_buf)) % len(g:term_buf)
         call nvim_win_set_buf(g:term_win, g:term_buf[g:current_term])
-        "call setwinvar(g:term_win, '&statusline', '%!NvimTerminal#UpdateStatusLine()')
         call NvimTerminal#ShowStatusLine()
         startinsert!
     endif
@@ -95,12 +94,35 @@ endfunction
 
 function! NvimTerminal#UpdateStatusLine()
     if g:term_height > 0 && !empty(g:term_buf)
-        let status = ' Terminal ' . (g:current_term + 1) . '/' . len(g:term_buf) . ' '
+        let term_name = get(g:nvim_terminal_custom_names, g:current_term, 'Terminal')
+        let status = ' ' . term_name . ' ' . (g:current_term + 1) . '/' . len(g:term_buf) . ' '
         let fillchar = '─'
         let fill = repeat(fillchar, &columns - len(status))
         return fill . status
     endif
     return ''
+endfunction
+
+function! NvimTerminal#SetCustomStatus()
+    if g:term_height > 0 && !empty(g:term_buf)
+        try
+            let custom_name = input('Enter name for Terminal ' . (g:current_term + 1) . ': ')
+            if !empty(custom_name)
+                let g:nvim_terminal_custom_names[g:current_term] = custom_name
+            elseif has_key(g:nvim_terminal_custom_names, g:current_term)
+                call remove(g:nvim_terminal_custom_names, g:current_term)
+            endif
+            call NvimTerminal#ShowStatusLine()
+        catch /^Vim:Interrupt$/
+            " This catches the Ctrl-C interrupt
+            echohl WarningMsg
+            echo "Cancelled name change"
+            echohl None
+        endtry
+    else
+        echo "No active terminal."
+    endif
+    startinsert!
 endfunction
 
 function! NvimTerminal#ShowStatusLine()

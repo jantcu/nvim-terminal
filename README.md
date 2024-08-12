@@ -26,6 +26,7 @@ The default keyboard shortcuts are:
 - Switch from terminal to main window: <kbd>Ctrl</kbd>-<kbd>w</kbd>+<kbd>k</kbd>
 - Switch from main window to terminal: <kbd>Ctrl</kbd>-<kbd>w</kbd>+<kbd>j</kbd>
 - Create new terminal when already in an opened terminal: <kbd>Alt</kbd>-<kbd>+</kbd>
+- Rename current terminal: <kbd>Alt</kbd>-<kbd>.</kbd> (use <kbd>Esc</kbd> or <kbd>Ctrl</kbd>-<kbd>c</kbd> to cancel) 
 - Remove terminal when already in an opened terminal: <kbd>Alt</kbd>-<kbd>-</kbd>
 - Move to next terminal: <kbd>Alt</kbd>-<kbd>]</kbd>
 - Move to previous terminal: <kbd>Alt</kbd>-<kbd>[</kbd>

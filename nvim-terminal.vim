@@ -27,6 +27,7 @@ endif
 if !exists('g:nvim_terminal_toggle_large')
   let g:nvim_terminal_toggle_large = '<A-z>'
 endif
+let g:nvim_terminal_custom_names = {}
 
 " Set default keybindings
 execute 'nnoremap <silent> ' . g:nvim_terminal_toggle_small . ' :call NvimTerminal#ToggleTerminal(g:nvim_terminal_small_height, g:nvim_terminal_background_color, g:nvim_terminal_statusline_color)<CR>'
@@ -41,6 +42,7 @@ augroup END
 
 tnoremap <A-+> <C-\><C-n>:call NvimTerminal#AddTerminal()<CR>
 tnoremap <A--> <C-\><C-n>:call NvimTerminal#RemoveTerminal()<CR>
+tnoremap <A-.> <C-\><C-n>:call NvimTerminal#SetCustomStatus()<CR>
 tnoremap <A-]> <C-\><C-n>:call NvimTerminal#NextTerminal()<CR>
 tnoremap <A-[> <C-\><C-n>:call NvimTerminal#PrevTerminal()<CR>
 " Switch to main window from terminal

@@ -5,6 +5,9 @@ function! NvimTerminal#AddTerminal()
         call add(g:term_buf, buf)
         let g:current_term = len(g:term_buf) - 1
 
+        " Initialize custom name for the new terminal
+        let g:nvim_terminal_custom_names[g:current_term] = 'Terminal'
+
         " Switch to the new buffer
         call nvim_win_set_buf(g:term_win, buf)
 
@@ -215,6 +218,8 @@ function! NvimTerminal#ToggleTerminal(height, background_color, statusline_color
         " Terminal doesn't exist yet so we need to create it
         let g:main_win = win_getid()  " Remember the main window ID
         let g:term_height = a:height
+        " Initialize custom name for the new terminal
+        let g:nvim_terminal_custom_names[g:current_term] = 'Terminal'
         " Create a floating window
         if empty(g:term_buf)
             let buf = nvim_create_buf(v:false, v:true)

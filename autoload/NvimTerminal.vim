@@ -1,3 +1,58 @@
+function! NvimTerminal#SaveTerminals()
+    let l:save_data = []
+    if exists("g:term_buf")
+        for i in range(len(g:term_buf))
+            let l:buf = g:term_buf[i]
+            if bufexists(l:buf)
+                let l:term_info = {
+                    \ 'name': get(g:nvim_terminal_custom_names, i, 'Terminal'),
+                    \ 'cwd': getbufvar(l:buf, 'term_cwd', getcwd()),
+                    \ 'cmd': NvimTerminal#GetTerminalCommand(l:buf)
+                \ }
+                call add(l:save_data, l:term_info)
+            endif
+        endfor
+    endif
+    let l:save_file = getcwd() . '/.nvim_terminals.json'
+    call writefile([json_encode(l:save_data)], l:save_file)
+    startinsert!
+endfunction
+
+function! NvimTerminal#GetTerminalCommand(buf)
+    let l:chan_id = getbufvar(a:buf, '&channel')
+    if l:chan_id > 0
+        let l:job_id = jobpid(l:chan_id)
+        if l:job_id > 0
+            let l:cmd = system('ps -o command= -p ' . l:job_id)
+            return trim(l:cmd)
+        endif
+    endif
+    return ''
+endfunction
+
+function! NvimTerminal#LoadTerminals()
+    let l:save_file = getcwd() . '/.nvim_terminals.json'
+    if filereadable(l:save_file)
+        let l:save_data = json_decode(readfile(l:save_file)[0])
+        for l:term_info in l:save_data
+            " Create a new buffer
+            let buf = nvim_create_buf(v:false, v:true)
+            call add(g:term_buf, buf)
+            let g:current_term = len(g:term_buf) - 1
+
+            " Set the custom name
+            let g:nvim_terminal_custom_names[g:current_term] = l:term_info.name
+
+            " Store the working directory
+            call setbufvar(buf, 'term_cwd', l:term_info.cwd)
+
+            " Store the command
+            call setbufvar(buf, 'term_cmd', l:term_info.cmd)
+        endfor
+        call NvimTerminal#ShowStatusLine()
+    endif
+endfunction
+
 function! NvimTerminal#AddTerminal()
     if g:term_height > 0
         " Create a new buffer
@@ -11,8 +66,16 @@ function! NvimTerminal#AddTerminal()
         " Switch to the new buffer
         call nvim_win_set_buf(g:term_win, buf)
 
+        " Store the current working directory
+        let cwd = getcwd()
+        call setbufvar(buf, 'term_cwd', cwd)
+
         " Open terminal in the new buffer
-        call termopen($SHELL, {"detach": 0})
+        let cmd = $SHELL
+        call termopen(cmd, {"cwd": cwd, "detach": 0})
+
+        " Store the command
+        call setbufvar(buf, 'term_cmd', cmd)
 
         " Set background color
         call setwinvar(g:term_win, '&winhl', 'Normal:NvimTerminalBackgroundColor')
@@ -97,18 +160,31 @@ endfunction
 function! NvimTerminal#NextTerminal()
     if g:term_height > 0 && !empty(g:term_buf)
         let g:current_term = (g:current_term + 1) % len(g:term_buf)
-        call nvim_win_set_buf(g:term_win, g:term_buf[g:current_term])
-        call NvimTerminal#ShowStatusLine()
-        startinsert!
+        call NvimTerminal#SetupTerminalWindow()
     endif
 endfunction
 
 function! NvimTerminal#PrevTerminal()
     if g:term_height > 0 && !empty(g:term_buf)
         let g:current_term = (g:current_term - 1 + len(g:term_buf)) % len(g:term_buf)
-        call nvim_win_set_buf(g:term_win, g:term_buf[g:current_term])
-        call NvimTerminal#ShowStatusLine()
-        startinsert!
+        call NvimTerminal#SetupTerminalWindow()
+    endif
+endfunction
+
+function! NvimTerminal#SetupTerminalWindow()
+    let buf = g:term_buf[g:current_term]
+    call nvim_win_set_buf(g:term_win, buf)
+    call setwinvar(g:term_win, '&winhl', 'Normal:NvimTerminalBackgroundColor')
+    call NvimTerminal#ShowStatusLine()
+    
+    " Check if the buffer is a terminal buffer
+    if getbufvar(buf, '&buftype') == 'terminal'
+        " If it's a terminal buffer, enter terminal mode
+        startinsert
+    else
+        " If it's not a terminal buffer, create a new terminal
+        call termopen($SHELL, {"detach": 0})
+        startinsert
     endif
 endfunction
 

@@ -344,6 +344,17 @@ function! NvimTerminal#ToggleTerminal(height, background_color, statusline_color
         " Set buffer options
         setlocal nobuflisted
         setlocal nohidden
+        " Create any loaded terminals
+        for i in range(len(g:term_buf))
+            let l:buf = g:term_buf[i]
+            if bufexists(l:buf)
+                call nvim_win_set_buf(g:term_win, l:buf)
+                call setwinvar(g:term_win, '&winhl', 'Normal:NvimTerminalBackgroundColor')
+                if getbufvar(l:buf, '&buftype') != 'terminal'
+                    call termopen($SHELL, {"detach": 0})
+                endif
+            endif
+        endfor
         startinsert!
     endif
 

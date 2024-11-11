@@ -82,7 +82,7 @@ function! NvimTerminal#AddTerminal()
 
         " Set buffer options
         setlocal nobuflisted
-        setlocal nohidden
+        setlocal hidden
 
         " Update status line
         call NvimTerminal#ShowStatusLine()
@@ -343,7 +343,7 @@ function! NvimTerminal#ToggleTerminal(height, background_color, statusline_color
         let g:term_win = win_getid()
         " Set buffer options
         setlocal nobuflisted
-        setlocal nohidden
+        setlocal hidden
         " Create any loaded terminals
         "for i in range(len(g:term_buf))
         "    let l:buf = g:term_buf[i]

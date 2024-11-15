@@ -42,6 +42,12 @@ augroup AdjustScrolling
     autocmd WinEnter,CursorMoved,CursorMovedI * if win_getid() == g:main_win | call NvimTerminal#AdjustMainWindowScrolling() | endif
 augroup END
 
+" Allow clicking into terminal with mouse
+" 'a' enters terminal mode.
+" 'x' removes the typed 'a'.
+" 't' ensures the removal happens immediately.
+autocmd BufEnter * if &buftype == 'terminal' | call feedkeys('a', 'xt') | endif
+
 "augroup NvimTerminalPersist
 "    autocmd!
 "    autocmd VimLeavePre * call NvimTerminal#SaveTerminals()

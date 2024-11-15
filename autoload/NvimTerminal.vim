@@ -359,48 +359,40 @@ function! NvimTerminal#ToggleTerminal(height, background_color, statusline_color
     endif
 
     call NvimTerminal#ShowStatusLine()
-    call NvimTerminal#AdjustMainWindowScrolling()
 endfunction
 
-function! NvimTerminal#AdjustMainWindowScrolling()
+function! NvimTerminal#AdjustScrollOff(mouse_scrolled)
     if g:term_height > 0
-        let l:main_height = g:term_height
-        call win_execute(g:main_win, 'call NvimTerminal#AdjustScrollOff(' . l:main_height . ')')
+        let l:total_lines = line('$')
+        let l:current_line = line('.')
+        let l:visible_lines = &lines - g:term_height - &cmdheight - 1
+
+        if winline() < &lines/2
+            let &l:scrolloff = 0
+        else
+            let &l:scrolloff = g:term_height
+
+            " Calculate the line where we should start adjusting scroll
+            let l:adjust_line = l:total_lines - g:term_height
+
+            if l:current_line >= l:adjust_line && a:mouse_scrolled == 0
+                let l:desired_top_line = l:total_lines - l:visible_lines + 2
+                let l:current_top_line = line('w0')
+
+                if l:current_top_line < l:desired_top_line
+                    let l:scroll_amount = l:desired_top_line - l:current_top_line
+                    execute 'normal! ' . l:scroll_amount . "\<C-E>"
+                endif
+            endif
+        endif
     else
         call setwinvar(g:main_win, '&scrolloff', 0)
     endif
 endfunction
 
-function! NvimTerminal#AdjustScrollOff(main_height)
-    let l:total_lines = line('$')
-    let l:current_line = line('.')
-    let l:visible_lines = &lines - a:main_height - &cmdheight - 1
-
-    if winline() < &lines/2
-        let &l:scrolloff = 0
-    else
-        let &l:scrolloff = a:main_height
-
-        " Calculate the line where we should start adjusting scroll
-        let l:adjust_line = l:total_lines - g:term_height
-
-        if l:current_line >= l:adjust_line
-            let l:desired_top_line = l:total_lines - l:visible_lines + 2
-            let l:current_top_line = line('w0')
-            
-            if l:current_top_line < l:desired_top_line
-                let l:scroll_amount = l:desired_top_line - l:current_top_line
-                execute 'normal! ' . l:scroll_amount . "\<C-E>"
-            endif
-        endif
-    endif
-
-endfunction
-
 function! NvimTerminal#SwitchToMainWindow()
     if win_getid() == g:term_win
         call win_gotoid(g:main_win)
-        call NvimTerminal#AdjustMainWindowScrolling()
     endif
 endfunction
 

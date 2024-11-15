@@ -39,7 +39,8 @@ execute 'tnoremap <silent> ' . g:nvim_terminal_toggle_large . ' <C-\><C-n>:call 
 
 augroup AdjustScrolling
     autocmd!
-    autocmd WinEnter,CursorMoved,CursorMovedI * if win_getid() == g:main_win | call NvimTerminal#AdjustMainWindowScrolling() | endif
+    autocmd WinEnter,CursorMoved,CursorMovedI * if win_getid() == g:main_win | call NvimTerminal#AdjustScrollOff(0) | endif
+    autocmd WinScrolled * if win_getid() == g:main_win | call NvimTerminal#AdjustScrollOff(1) | endif
 augroup END
 
 " Allow clicking into terminal with mouse
